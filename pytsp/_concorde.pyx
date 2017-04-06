@@ -59,6 +59,15 @@ cdef class _CCdatagroup:
         else:
             return np.array([])
 
+    @property
+    def z(self):
+        cdef double[:] y_data
+        if self.initialized:
+            z_data = <double[:self.ncount]>self.c_data.z
+            return np.asarray(z_data)
+        else:
+            return np.array([])
+
 
 def _CCutil_gettsplib(str fname):
     cdef int ncount, retval

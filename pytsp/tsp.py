@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, print_function
 
+from collections import namedtuple
 import os
 import shutil
 import tempfile
 import uuid
 
-from pytsp._concorde import _CCdatagroup, _CCutil_gettsplib, _CCtsp_solve_dat
-from pytsp.util import write_tsp_file
+from pytsp._concorde import _CCutil_gettsplib, _CCtsp_solve_dat
+from pytsp.util import write_tsp_file, EDGE_WEIGHT_TYPES
+
+ComputedTour = namedtuple('ComputedTour', [
+    'tour', 'optimal_value', 'success', 'found_tour', 'hit_timebound'
+])
 
 
-class ConcordeDataGroup(object):
-    """
-    TODO expose a way to get the data out again.
-    TODO write tests
-    """
+class TSPSolver(object):
 
     def __init__(self):
         self._data = None
@@ -37,8 +38,12 @@ class ConcordeDataGroup(object):
         This routine writes the given data to a temporary file, and then uses
         Concorde's file parser to read from file and do the initialization.
         """
+        if norm not in EDGE_WEIGHT_TYPES:
+            raise ValueError("norm must be one of {} but got {!r}".format(
+                             ', '.join(EDGE_WEIGHT_TYPES), norm))
+
         # TODO: properly figure out Concorde's CCdatagroup format and
-        # initialize this object directly.
+        # initialize this object directly instead of going via file.
         if name is None:
             name = uuid.uuid4().hex
         try:
@@ -58,18 +63,19 @@ class ConcordeDataGroup(object):
     def y(self):
         return self._data.y
 
+    @property
+    def z(self):
+        return self._data.z
+
     def __str__(self):
         if self._data is None:
-            return "Uninitialized ConcordeDataGroup"
+            return "Uninitialized TSPSolver"
         else:
-            return "ConcordeDataGroup with {} nodes".format(self._ncount)
+            return "TSPSolver with {} nodes".format(self._ncount)
 
-
-# class ConcordeSolver(object):
-
-#     def __init__(self):
-#         pass
-
-#     @classmethod
-#     def from_file(cls, fname):
-        
+    def solve(self, time_bound=-1, verbose=True, random_seed=0):
+        res = _CCtsp_solve_dat(
+            self._ncount, self._data, "name",
+            time_bound, not verbose, random_seed
+        )
+        return ComputedTour(*res)
