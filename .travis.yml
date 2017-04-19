@@ -1,0 +1,13 @@
+language: python
+cache:
+  directories:
+    - $HOME/data
+compiler:
+  - gcc
+before_install:
+  - tools/build_concorde.sh
+  - pip install -r requirements.txt
+install:
+  - python setup.py develop
+script:
+  - python -m unittest discover -v pytsp
