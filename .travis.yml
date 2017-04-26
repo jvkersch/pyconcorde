@@ -5,6 +5,9 @@ cache:
 compiler:
   - gcc
 before_install:
+  - pwd
+  - ls $HOME/data
+  - ls -l $HOME/build
   - tools/build_concorde.sh
   - pip install -r requirements.txt
 install:

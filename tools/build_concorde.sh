@@ -34,7 +34,7 @@ function download_concorde() {
 }
 
 function build_concorde() {
-    if [ ! -f "$DATA/concorde.a" ]; then
+    if [ ! -f "$DATA/lib/concorde.a" ]; then
 	DATAFOLDER=$(readlink -f "$DATA")
 	(cd "$BUILD/concorde" && \
 	     CFLAGS="-fPIC -O2 -g" ./configure --prefix "$DATAFOLDER" --with-qsopt="$DATAFOLDER" && \
