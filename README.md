@@ -8,6 +8,12 @@ PyTSP is a Python wrapper around the [Concorde TSP solver](http://www.math.uwate
 
 PyTSP allows you to compute solutions to the Traveling Salesman Problem with just a few lines of Python code. It uses the state-of-the-art Concorde solver and provides a convenient Python layer around it.
 
+<p align="center">
+  <a href="examples/us_state_capitals.py">
+	<img src="examples/us_state_capitals.png" alt="US state capital tour"/>
+	</a>
+</p>
+
 How do I install it?
 ------
 
