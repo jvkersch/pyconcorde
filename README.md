@@ -1,6 +1,8 @@
 PyTSP
 =====
 
+[![Build Status](https://travis-ci.org/jvkersch/pytsp.svg?branch=master)](https://travis-ci.org/jvkersch/pytsp)
+
 What is it?
 -----
 
