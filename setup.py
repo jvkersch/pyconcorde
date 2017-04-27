@@ -26,7 +26,8 @@ def validate_folder(path, required_fnames):
 
 
 def get_concorde_base_dir():
-    v = partial(validate_folder, required_fnames=['include/concorde.h', 'lib/concorde.a'])
+    v = partial(validate_folder,
+                required_fnames=['include/concorde.h', 'lib/concorde.a'])
     # Environment variable
     concorde_dir = os.environ.get('CONCORDE_DIR')
     if concorde_dir is not None:
@@ -47,7 +48,8 @@ def get_concorde_base_dir():
 
 
 def get_qsopt_base_dir():
-    v = partial(validate_folder, required_fnames=['qsopt.h', 'qsopt.a'])
+    v = partial(validate_folder,
+                required_fnames=['include/qsopt.h', 'lib/qsopt.a'])
     # Environment variable
     qsopt_dir = os.environ.get('QSOPT_DIR')
     if qsopt_dir is not None:
@@ -90,5 +92,6 @@ setup(
     version='0.1.0',
     install_requires=[
         'cython>=0.22.0',
+        'numpy>=1.10.0',
     ]
 )
