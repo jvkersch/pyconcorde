@@ -1,16 +1,25 @@
-language: python
+language: generic
 cache:
   directories:
     - $HOME/data
-compiler:
-  - gcc
-before_install:
-  - pwd
-  - ls $HOME/data
-  - ls -l $HOME/build
-  - tools/build_concorde.sh
-  - pip install -r requirements.txt
+matrix:
+  include:
+    - language: generic
+      os: osx
+      before_install:
+        - brew update
+        - brew install python3
+        - virtualenv env -p python3
+        - source env/bin/activate
+        - brew install homebrew/science/concorde
+    - language: python
+      os: linux
+      before_install:
+        - tools/build_concorde.sh
+
 install:
-  - python setup.py develop
+  - tools/bootstrap_edm.sh
+  - export PATH="$PATH:$HOME/bin"
+  - edm run -e travisci -- python setup.py develop
 script:
-  - python -m unittest discover -v pytsp
+  - edm run -e travisci -- python -m unittest discover -v pytsp
