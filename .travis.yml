@@ -20,6 +20,6 @@ matrix:
 install:
   - tools/bootstrap_edm.sh
   - export PATH="$PATH:$HOME/bin"
-  - edm run -e travisci python setup.py develop
+  - edm run -e travisci -- python setup.py develop
 script:
-  - edm run -e travisci python -m unittest discover -v pytsp
+  - edm run -e travisci -- python -m unittest discover -v pytsp
