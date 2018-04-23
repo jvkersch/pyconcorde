@@ -4,14 +4,10 @@ cache:
     - $HOME/data
 matrix:
   include:
-    - language: generic
+    - language: python
       os: osx
       before_install:
-        - brew update
-        - brew install python3
-        - virtualenv env -p python3
-        - source env/bin/activate
-        - brew install homebrew/science/concorde
+        - tools/build_concorde.sh
     - language: python
       os: linux
       before_install:
