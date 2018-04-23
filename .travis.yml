@@ -1,7 +1,7 @@
 language: generic
 cache:
   directories:
-    - $HOME/data
+    - $PWD/data
 matrix:
   include:
     - language: python
