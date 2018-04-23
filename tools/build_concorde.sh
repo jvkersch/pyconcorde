@@ -6,21 +6,31 @@
 set -e
 
 # Static libraries and headers. This will be uploaded to Travis' cache.
-DATA="$HOME/data"
+DATA="$PWD/data"
 mkdir -p "$DATA/"{lib,include}
 # Temporary build directory. This won't get cached.
-BUILD="$HOME/build"
+BUILD="$PWD/build"
 mkdir -p "$BUILD"
+
+# Configure flags
+PLATFORM=$(uname)
+if [[ "$PLATFORM" == "Darwin" ]]; then
+    FLAGS="--host=darwin"
+    QSOPT="https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/mac64/qsopt.a"
+    QSOPT_H="https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/mac64/qsopt.h"
+else
+    FLAGS=""
+    QSOPT="http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a"
+    QSOPT_H="http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h"
+fi
 
 function download_qsopt() {
     if [ ! -f "$DATA/lib/qsopt.a" ]; then
-	curl -o "$DATA/lib/qsopt.a" \
-	     http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a
+	curl -o "$DATA/lib/qsopt.a" "$QSOPT"
 	ln -fs "$DATA/lib/qsopt.a" "$DATA/qsopt.a"
     fi
     if [ ! -f "$DATA/include/qsopt.h" ]; then
-	curl -o "$DATA/include/qsopt.h" \
-	     http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h
+	curl -o "$DATA/include/qsopt.h" "$QSOPT_H"
 	ln -fs "$DATA/include/qsopt.h" "$DATA/qsopt.h"
     fi
 }
@@ -35,9 +45,11 @@ function download_concorde() {
 
 function build_concorde() {
     if [ ! -f "$DATA/lib/concorde.a" ]; then
-	DATAFOLDER=$(readlink -f "$DATA")
 	(cd "$BUILD/concorde" && \
-	     CFLAGS="-fPIC -O2 -g" ./configure --prefix "$DATAFOLDER" --with-qsopt="$DATAFOLDER" && \
+	     CFLAGS="-fPIC -O2 -g" ./configure \
+                   --prefix "$DATA" \
+                   --with-qsopt="$DATA" \
+                   "$FLAGS" && \
 	     make)
         mv "$BUILD/concorde/concorde.a" "$DATA/lib"
         mv "$BUILD/concorde/concorde.h" "$DATA/include"
