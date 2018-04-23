@@ -4,9 +4,13 @@ cache:
     - $PWD/data
 matrix:
   include:
-    - language: python
+ - language: generic
       os: osx
       before_install:
+        - brew update
+        - brew install python3
+        - virtualenv env -p python3
+        - source env/bin/activate
         - tools/build_concorde.sh
     - language: python
       os: linux
