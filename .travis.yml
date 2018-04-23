@@ -4,7 +4,7 @@ cache:
     - $PWD/data
 matrix:
   include:
- - language: generic
+    - language: generic
       os: osx
       before_install:
         - brew update
