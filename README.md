@@ -72,9 +72,7 @@ How do I build Concorde/QSOpt?
 
 First, check if your platform provides packages for Concorde/QSOpt.
 
-* **Mac OS**: Just run `brew install concorde`, and the necessary libraries will be downloaded and installed in the right place. No further setup is needed.
-
-* **Linux**: You need to build Concorde from source, and download a packaged version of QSOpt. PyTSP comes with a [shell script](tools/build_concorde.sh) to build Concorde with the appropriate flags to automate this.
+* **Linux/Mac OS**: You need to build Concorde from source, and download a packaged version of QSOpt. PyTSP comes with a [shell script](tools/build_concorde.sh) to build Concorde with the appropriate flags to automate this.
 
  **Note:** you must compile Concorde with position-independent symbols (the `-fPIC` flag in gcc) and download the PIC-enabled version of QSOpt.
 
