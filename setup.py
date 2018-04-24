@@ -36,8 +36,8 @@ def get_concorde_base_dir():
     for location in glob.glob("/usr/local/Cellar/concorde/*/lib/concorde.a"):
         concorde_dir = dirname(dirname(location))
         return v(concorde_dir)
-    # $HOME/data
-    concorde_dir = os.path.normpath(os.path.expanduser("~/data"))
+    # ./data
+    concorde_dir = os.path.normpath("data")
     if os.path.exists(concorde_dir):
         return v(concorde_dir)
     # That's it, we're all out of ideas
@@ -58,8 +58,8 @@ def get_qsopt_base_dir():
     for location in glob.glob("/usr/local/Cellar/qsopt/*/lib/qsopt.a"):
         qsopt_dir = dirname(dirname(location))
         return v(qsopt_dir)
-    # $HOME/data
-    qsopt_dir = os.path.normpath(os.path.expanduser("~/data"))
+    # ./data
+    qsopt_dir = os.path.normpath("data")
     if os.path.exists(qsopt_dir):
         return v(qsopt_dir)
     # That's it, we're all out of ideas

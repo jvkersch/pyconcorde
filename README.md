@@ -23,9 +23,18 @@ PyTSP runs under Python 2.7 and 3.4 and up. It needs the [Concorde TSP solver](h
 
 To build PyTSP, run
 
-    pip install git+https://github.com/jvkersch/pytsp.git
+    git clone https://github.com/jvkersch/pytsp
+	cd pytsp
+	tools/build_concorde.sh
+	pip install -e .
 
-If running `pip` fails with a message that Concorde or QSOpt cannot be found, set the environment variable `CONCORDE_DIR` (or `QSOPT_DIR`) to point to the folder where you installed Concorde (or QSOpt). This only needs to be done at build time: Concorde is distributed as a static library, so it will be pulled in to the Cython object file at link time.
+The `tools/build_concorde.sh` step is only necessary if you do not have
+Concorde and QSOpt available: the script will download and build these
+libraries and make them available for pip during installation. If you _do_ have
+Concorde and/or QSOpt installed (or an equivalent linear solver), you can use
+those instead. Simply omit the `tools/build_concorde.sh` step, and set the
+environment variable `CONCORDE_DIR` (or `QSOPT_DIR`) to point to the folder
+where you installed Concorde (or QSOpt).
 
 What can I do with it?
 -------
@@ -72,9 +81,7 @@ How do I build Concorde/QSOpt?
 
 First, check if your platform provides packages for Concorde/QSOpt.
 
-* **Mac OS**: Just run `brew install concorde`, and the necessary libraries will be downloaded and installed in the right place. No further setup is needed.
-
-* **Linux**: You need to build Concorde from source, and download a packaged version of QSOpt. PyTSP comes with a [shell script](tools/build_concorde.sh) to build Concorde with the appropriate flags to automate this.
+* **Linux/Mac OS**: You need to build Concorde from source, and download a packaged version of QSOpt. PyTSP comes with a [shell script](tools/build_concorde.sh) to build Concorde with the appropriate flags to automate this.
 
  **Note:** you must compile Concorde with position-independent symbols (the `-fPIC` flag in gcc) and download the PIC-enabled version of QSOpt.
 
