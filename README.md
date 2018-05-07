@@ -1,14 +1,14 @@
-PyTSP
-=====
+PyConcorde
+==========
 
-[![Build Status](https://travis-ci.org/jvkersch/pytsp.svg?branch=master)](https://travis-ci.org/jvkersch/pytsp)
+[![Build Status](https://travis-ci.org/jvkersch/pyconcorde.svg?branch=master)](https://travis-ci.org/jvkersch/pyconcorde)
 
 What is it?
 -----
 
-PyTSP is a Python wrapper around the [Concorde TSP solver](http://www.math.uwaterloo.ca/tsp/concorde.html).
+PyConcorde is a Python wrapper around the [Concorde TSP solver](http://www.math.uwaterloo.ca/tsp/concorde.html).
 
-PyTSP allows you to compute solutions to the Traveling Salesman Problem with just a few lines of Python code. It uses the state-of-the-art Concorde solver and provides a convenient Python layer around it.
+PyConcorde allows you to compute solutions to the Traveling Salesman Problem with just a few lines of Python code. It uses the state-of-the-art Concorde solver and provides a convenient Python layer around it.
 
 <p align="center">
   <a href="examples/us_state_capitals.py">
@@ -19,12 +19,12 @@ PyTSP allows you to compute solutions to the Traveling Salesman Problem with jus
 How do I install it?
 ------
 
-PyTSP runs under Python 2.7 and 3.4 and up. It needs the [Concorde TSP solver](http://www.math.uwaterloo.ca/tsp/concorde.html) and [QSOpt linear programming library](http://www.math.uwaterloo.ca/~bico/qsopt/). Further instructions on building/downloading those can be found below.
+PyConcorde runs under Python 2.7 and 3.4 and up. It needs the [Concorde TSP solver](http://www.math.uwaterloo.ca/tsp/concorde.html) and [QSOpt linear programming library](http://www.math.uwaterloo.ca/~bico/qsopt/). Further instructions on building/downloading those can be found below.
 
-To build PyTSP, run
+To build PyConcorde, run
 
-    git clone https://github.com/jvkersch/pytsp
-	cd pytsp
+    git clone https://github.com/jvkersch/pyconcorde
+	cd pyconcorde
 	tools/build_concorde.sh
 	pip install -e .
 
@@ -39,11 +39,11 @@ where you installed Concorde (or QSOpt).
 What can I do with it?
 -------
 
-PyTSP is a very light-weight library. The main entry point is the `TSPSolver` class. Here we use it to read in the Berlin52 dataset, a dataset of 52 locations in Berlin (part of the TSPlib test data).
+PyConcorde is a very light-weight library. The main entry point is the `TSPSolver` class. Here we use it to read in the Berlin52 dataset, a dataset of 52 locations in Berlin (part of the TSPlib test data).
 
 ```python
-    >>> from pytsp.tsp import TSPSolver
-    >>> from pytsp.tests.data_utils import get_dataset_path
+    >>> from pyconcorde.tsp import TSPSolver
+    >>> from pyconcorde.tests.data_utils import get_dataset_path
     >>> fname = get_dataset_path("berlin52")
     >>> solver = TSPSolver.from_tspfile(fname)
     Problem Name: berlin52
@@ -53,7 +53,7 @@ PyTSP is a very light-weight library. The main entry point is the `TSPSolver` cl
     Rounded Euclidean Norm (CC_EUCLIDEAN)
 ```    
 
-As you can see above, PyTSP (or rather, Concorde) is somewhat chatty and will print various message to the standard output. Now that we have a solver instance, let's compute a solution. On my machine this is almost instantaneous.
+As you can see above, PyConcorde (or rather, Concorde) is somewhat chatty and will print various message to the standard output. Now that we have a solver instance, let's compute a solution. On my machine this is almost instantaneous.
    
 ```python    
     >>> solution = solver.solve()
@@ -81,13 +81,13 @@ How do I build Concorde/QSOpt?
 
 First, check if your platform provides packages for Concorde/QSOpt.
 
-* **Linux/Mac OS**: You need to build Concorde from source, and download a packaged version of QSOpt. PyTSP comes with a [shell script](tools/build_concorde.sh) to build Concorde with the appropriate flags to automate this.
+* **Linux/Mac OS**: You need to build Concorde from source, and download a packaged version of QSOpt. PyConcorde comes with a [shell script](tools/build_concorde.sh) to build Concorde with the appropriate flags to automate this.
 
  **Note:** you must compile Concorde with position-independent symbols (the `-fPIC` flag in gcc) and download the PIC-enabled version of QSOpt.
 
-* **Windows:** I haven't tried using PyTSP on Windows yet. If you get the library to work, please open a ticket to describe any tweaks.
+* **Windows:** I haven't tried using PyConcorde on Windows yet. If you get the library to work, please open a ticket to describe any tweaks.
 
 License
 -----
 
-PyTSP is licensed under the [Modified BSD license](COPYING). Note that Concorde and QSOpt are released under different licenses, and that PyTSP does not include any code from these packages.
+PyConcorde is licensed under the [Modified BSD license](COPYING). Note that Concorde and QSOpt are released under different licenses, and that PyConcorde does not include any code from these packages.

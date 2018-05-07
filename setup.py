@@ -76,11 +76,11 @@ print('QSOPT_DIR = {}'.format(QSOPT_DIR))
 
 
 setup(
-    name='pytsp',
+    name='pyconcorde',
     ext_modules=cythonize([
         Extension(
-            'pytsp._concorde',
-            sources=["pytsp/_concorde.pyx"],
+            'pyconcorde._concorde',
+            sources=["pyconcorde/_concorde.pyx"],
             include_dirs=[os.path.join(CONCORDE_DIR, "include"),
                           np.get_include()],
             extra_objects=[
