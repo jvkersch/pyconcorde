@@ -2,8 +2,8 @@ import unittest
 
 import numpy.testing as nptest
 
-from pyconcorde.tsp import TSPSolver
-from pyconcorde.tests.data_utils import get_dataset_path, get_solution_data
+from concorde.tsp import TSPSolver
+from concorde.tests.data_utils import get_dataset_path, get_solution_data
 
 
 class TestTSPSolver(unittest.TestCase):

@@ -4,7 +4,7 @@ from __future__ import division, print_function
 import numpy as np
 import pandas as pd
 
-from pyconcorde.tsp import TSPSolver
+from concorde.tsp import TSPSolver
 
 # Source for state capital data:
 # http://www.jetpunk.com/data/countries/united-states/state-capitals-list

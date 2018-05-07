@@ -42,8 +42,8 @@ What can I do with it?
 PyConcorde is a very light-weight library. The main entry point is the `TSPSolver` class. Here we use it to read in the Berlin52 dataset, a dataset of 52 locations in Berlin (part of the TSPlib test data).
 
 ```python
-    >>> from pyconcorde.tsp import TSPSolver
-    >>> from pyconcorde.tests.data_utils import get_dataset_path
+    >>> from concorde.tsp import TSPSolver
+    >>> from concorde.tests.data_utils import get_dataset_path
     >>> fname = get_dataset_path("berlin52")
     >>> solver = TSPSolver.from_tspfile(fname)
     Problem Name: berlin52

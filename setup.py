@@ -79,8 +79,8 @@ setup(
     name='pyconcorde',
     ext_modules=cythonize([
         Extension(
-            'pyconcorde._concorde',
-            sources=["pyconcorde/_concorde.pyx"],
+            'concorde._concorde',
+            sources=["concorde/_concorde.pyx"],
             include_dirs=[os.path.join(CONCORDE_DIR, "include"),
                           np.get_include()],
             extra_objects=[
@@ -93,5 +93,18 @@ setup(
     install_requires=[
         'cython>=0.22.0',
         'numpy>=1.10.0',
-    ]
+    ],
+    license='BSD',
+    author='Joris Vankerschaver',
+    author_email='joris.vankerschaver@gmail.com',
+    url='https://github.com/jvkersch/pyconcorde',
+    description='Cython wrappers for the Concorde TSP library',
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Science/Research",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "License :: OSI Approved :: BSD License",
+    ],
 )

@@ -4,8 +4,8 @@ import unittest
 import numpy as np
 import numpy.testing as nptest
 
-from pyconcorde._concorde import _CCutil_gettsplib, _CCtsp_solve_dat
-from pyconcorde.tests.data_utils import get_dataset_path, get_solution_data
+from concorde._concorde import _CCutil_gettsplib, _CCtsp_solve_dat
+from concorde.tests.data_utils import get_dataset_path, get_solution_data
 
 
 class TestCCutil_gettsplib(unittest.TestCase):

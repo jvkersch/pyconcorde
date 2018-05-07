@@ -7,8 +7,8 @@ import shutil
 import tempfile
 import uuid
 
-from pyconcorde._concorde import _CCutil_gettsplib, _CCtsp_solve_dat
-from pyconcorde.util import write_tsp_file, EDGE_WEIGHT_TYPES
+from concorde._concorde import _CCutil_gettsplib, _CCtsp_solve_dat
+from concorde.util import write_tsp_file, EDGE_WEIGHT_TYPES
 
 ComputedTour = namedtuple('ComputedTour', [
     'tour', 'optimal_value', 'success', 'found_tour', 'hit_timebound'
