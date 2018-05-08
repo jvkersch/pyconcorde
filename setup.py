@@ -1,7 +1,18 @@
-import os
-from os.path import dirname
+from __future__ import print_function, unicode_literals
+
 from functools import partial
 import glob
+import os
+from os.path import dirname, exists, join as pjoin
+import shutil
+import subprocess
+import sys
+
+try:
+    import urllib.request
+    urlretrieve = urllib.request.urlretrieve
+except ImportError:  # python 2
+    import urllib.urlretrieve as urlretrieve
 
 import setuptools  # noqa
 
@@ -10,6 +21,19 @@ from distutils.core import setup
 from distutils.extension import Extension
 
 import numpy as np
+
+QSOPT_LOCATION = {
+    "darwin": (
+        "https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/mac64/qsopt.a",
+        "https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/mac64/qsopt.h"
+    ),
+    "linux": (
+        "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a",
+        "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h"
+    )
+}
+
+CONCORDE_SRC = "http://www.math.uwaterloo.ca/tsp/concorde/downloads/codes/src/co031219.tgz"  # noqa
 
 
 def validate_folder(path, required_fnames):
@@ -69,10 +93,69 @@ def get_qsopt_base_dir():
     )
 
 
-CONCORDE_DIR = get_concorde_base_dir()
-QSOPT_DIR = get_qsopt_base_dir()
-print('CONCORDE_DIR = {}'.format(CONCORDE_DIR))
-print('QSOPT_DIR = {}'.format(QSOPT_DIR))
+# CONCORDE_DIR = get_concorde_base_dir()
+# QSOPT_DIR = get_qsopt_base_dir()
+# print('CONCORDE_DIR = {}'.format(CONCORDE_DIR))
+# print('QSOPT_DIR = {}'.format(QSOPT_DIR))
+
+
+def _safe_makedirs(*paths):
+    for path in paths:
+        try:
+            os.makedirs(path)
+        except os.error:
+            pass
+
+
+def download_concorde_qsopt():
+    _safe_makedirs("data")
+    _safe_makedirs("build")
+    qsopt_a_path = pjoin("data", "qsopt.a")
+    qsopt_h_path = pjoin("data", "qsopt.h")
+    if not exists(qsopt_a_path) or not exists(qsopt_h_path):
+        print("qsopt is missing, downloading")
+        qsopt_a_url, qsopt_h_url = QSOPT_LOCATION[sys.platform]
+        urlretrieve(qsopt_a_url, qsopt_a_path)
+        urlretrieve(qsopt_h_url, qsopt_h_path)
+    concorde_src_path = pjoin("build", "concorde.tgz")
+    if not exists(concorde_src_path):
+        print("concorde is missing, downloading")
+        urlretrieve(CONCORDE_SRC, concorde_src_path)
+
+
+def _run(cmd, cwd):
+    subprocess.check_call(cmd, shell=True, cwd=cwd)
+
+
+def build_concorde():
+    if (not exists("data/include/concorde.h") or
+        not exists("data/lib/concorde.a")):
+        print("building concorde")
+        _run("tar xzvf concorde.tgz", "build")
+
+        cflags = "-fPIC -O2 -g"
+
+        if sys.platform.startswith("darwin"):
+            flags += "--host=darwin"
+        else:
+            flags = ""
+
+        datadir = os.path.abspath("data")
+        cwd = ('CFLAGS="{cflags}" ./configure --prefix {data} '
+               '--with-qsopt={data} {flags}').format(
+                   cflags=cflags,
+                   data=datadir,
+                   flags=flags
+               )
+
+        _run(cwd, "build/concorde")
+        _run("make", "build/concorde")
+
+        _safe_makedirs("data/lib", "data/include")
+        shutil.copyfile("build/concorde/concorde.a",
+                        "data/lib/concorde.a")
+        shutil.copyfile("build/concorde/concorde.h",
+                        "data/include/concorde.h")
 
 
 setup(
