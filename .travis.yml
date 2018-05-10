@@ -33,7 +33,7 @@ install:
   - edm run -e travisci -- python setup.py develop
 
 script:
-  - edm run -e travisci -- python -m unittest discover -v pytsp
+  - edm run -e travisci -- python -m unittest discover -v concorde
 
 after_success:
   - edm run -- pip install codecov

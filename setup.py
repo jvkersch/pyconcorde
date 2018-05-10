@@ -13,12 +13,13 @@ not set these variables (and rely on the downloaded Concorde) or set
 both of them. Setting only one will not work as intended.
 
 """
-from __future__ import print_function, unicode_literals
+from __future__ import print_function
 
 from functools import partial
 import glob
 import os
 from os.path import dirname, exists, join as pjoin
+import platform
 import shutil
 import subprocess
 import sys
@@ -27,7 +28,7 @@ try:
     import urllib.request
     urlretrieve = urllib.request.urlretrieve
 except ImportError:  # python 2
-    import urllib.urlretrieve as urlretrieve
+    from urllib import urlretrieve
 
 from setuptools.command.build_ext import build_ext as _build_ext
 
@@ -38,11 +39,11 @@ from distutils.extension import Extension
 import numpy as np
 
 QSOPT_LOCATION = {
-    "darwin": (
+    "Darwin": (
         "https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/mac64/qsopt.a",
         "https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/mac64/qsopt.h"
     ),
-    "linux": (
+    "Linux": (
         "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a",
         "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h"
     )
@@ -66,7 +67,7 @@ def download_concorde_qsopt():
     qsopt_h_path = pjoin("data", "qsopt.h")
     if not exists(qsopt_a_path) or not exists(qsopt_h_path):
         print("qsopt is missing, downloading")
-        qsopt_a_url, qsopt_h_url = QSOPT_LOCATION[sys.platform]
+        qsopt_a_url, qsopt_h_url = QSOPT_LOCATION[platform.system()]
         urlretrieve(qsopt_a_url, qsopt_a_path)
         urlretrieve(qsopt_h_url, qsopt_h_path)
     concorde_src_path = pjoin("build", "concorde.tgz")
@@ -87,8 +88,8 @@ def build_concorde():
 
         cflags = "-fPIC -O2 -g"
 
-        if sys.platform.startswith("darwin"):
-            flags += "--host=darwin"
+        if platform.system().startswith("Darwin"):
+            flags = "--host=darwin"
         else:
             flags = ""
 
@@ -109,7 +110,7 @@ def build_concorde():
                         "data/concorde.h")
 
 
-class build_ext(_build_ext):
+class build_ext(_build_ext, object):
     """ Build command that downloads and installs Concorde, if not found.
     """
 
@@ -129,7 +130,7 @@ class build_ext(_build_ext):
         return bool(qsopt_dir) and bool(concorde_dir)
 
 
-class ConcordeExtension(Extension):
+class ConcordeExtension(Extension, object):
     """ Extension that sets Concorde/QSOpt lib/include args.
     """
 
