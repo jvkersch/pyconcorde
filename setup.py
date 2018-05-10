@@ -1,3 +1,18 @@
+""" setup command to build Concorde Cython wrappers.
+
+By default, the setup script will download the QSOpt linear solver, and
+download and compile Concorde. If you have either one of these packages
+already installed, you can use the installed version by setting the
+following environment variables:
+
+QSOPT_DIR: should point to a folder containing qsopt.a and qsopt.h
+CONCORDE_DIR: contains concorde.a and concorde.h
+
+Note that for the build process to work correctly, you should either
+not set these variables (and rely on the downloaded Concorde) or set
+both of them. Setting only one will not work as intended.
+
+"""
 from __future__ import print_function, unicode_literals
 
 from functools import partial
@@ -14,7 +29,7 @@ try:
 except ImportError:  # python 2
     import urllib.urlretrieve as urlretrieve
 
-import setuptools  # noqa
+from setuptools.command.build_ext import build_ext as _build_ext
 
 from Cython.Build import cythonize
 from distutils.core import setup
@@ -34,69 +49,6 @@ QSOPT_LOCATION = {
 }
 
 CONCORDE_SRC = "http://www.math.uwaterloo.ca/tsp/concorde/downloads/codes/src/co031219.tgz"  # noqa
-
-
-def validate_folder(path, required_fnames):
-    missing = set()
-    for fname in required_fnames:
-        f =  os.path.isfile(os.path.join(path, fname))
-        print(os.path.join(path, fname))
-        if not f:
-            missing.add(fname)
-    if missing:
-        raise RuntimeError("In folder {}: missing {}".format(
-            path, ', '.join(missing)))
-    return path
-
-
-def get_concorde_base_dir():
-    v = partial(validate_folder,
-                required_fnames=['include/concorde.h', 'lib/concorde.a'])
-    # Environment variable
-    concorde_dir = os.environ.get('CONCORDE_DIR')
-    if concorde_dir is not None:
-        return v(concorde_dir)
-    # Homebrew
-    for location in glob.glob("/usr/local/Cellar/concorde/*/lib/concorde.a"):
-        concorde_dir = dirname(dirname(location))
-        return v(concorde_dir)
-    # ./data
-    concorde_dir = os.path.normpath("data")
-    if os.path.exists(concorde_dir):
-        return v(concorde_dir)
-    # That's it, we're all out of ideas
-    raise RuntimeError(
-        "Install Concorde and set the CONCORDE_DIR environment variable "
-        "to point to the Concorde base folder."
-    )
-
-
-def get_qsopt_base_dir():
-    v = partial(validate_folder,
-                required_fnames=['include/qsopt.h', 'lib/qsopt.a'])
-    # Environment variable
-    qsopt_dir = os.environ.get('QSOPT_DIR')
-    if qsopt_dir is not None:
-        return v(qsopt_dir)
-    # Homebrew
-    for location in glob.glob("/usr/local/Cellar/qsopt/*/lib/qsopt.a"):
-        qsopt_dir = dirname(dirname(location))
-        return v(qsopt_dir)
-    # ./data
-    qsopt_dir = os.path.normpath("data")
-    if os.path.exists(qsopt_dir):
-        return v(qsopt_dir)
-    # That's it, we're all out of ideas
-    raise RuntimeError(
-        "Install Qsopt and set the QSOPT_DIR environment variable "
-        "to point to the Qsopt base folder."
-    )
-
-
-# CONCORDE_DIR = get_concorde_base_dir()
-# QSOPT_DIR = get_qsopt_base_dir()
-# print('CONCORDE_DIR = {}'.format(CONCORDE_DIR))
-# print('QSOPT_DIR = {}'.format(QSOPT_DIR))
 
 
 def _safe_makedirs(*paths):
@@ -128,8 +80,8 @@ def _run(cmd, cwd):
 
 
 def build_concorde():
-    if (not exists("data/include/concorde.h") or
-        not exists("data/lib/concorde.a")):
+    if (not exists("data/concorde.h") or
+        not exists("data/concorde.a")):
         print("building concorde")
         _run("tar xzvf concorde.tgz", "build")
 
@@ -151,25 +103,54 @@ def build_concorde():
         _run(cwd, "build/concorde")
         _run("make", "build/concorde")
 
-        _safe_makedirs("data/lib", "data/include")
         shutil.copyfile("build/concorde/concorde.a",
-                        "data/lib/concorde.a")
+                        "data/concorde.a")
         shutil.copyfile("build/concorde/concorde.h",
-                        "data/include/concorde.h")
+                        "data/concorde.h")
+
+
+class build_ext(_build_ext):
+    """ Build command that downloads and installs Concorde, if not found.
+    """
+
+    def run(self):
+        if not self.has_external_concorde:
+            download_concorde_qsopt()
+            build_concorde()
+        else:
+            print("Using external Concorde/QSOpt")
+
+        super(build_ext, self).run()
+
+    @property
+    def has_external_concorde(self):
+        qsopt_dir = os.environ.get('QSOPT_DIR')
+        concorde_dir = os.environ.get('CONCORDE_DIR')
+        return bool(qsopt_dir) and bool(concorde_dir)
+
+
+class ConcordeExtension(Extension):
+    """ Extension that sets Concorde/QSOpt lib/include args.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(ConcordeExtension, self).__init__(*args, **kwargs)
+        qsopt_dir = os.environ.get('QSOPT_DIR', "data")
+        concorde_dir = os.environ.get('CONCORDE_DIR', "data")
+        self.include_dirs.append(concorde_dir)
+        self.extra_objects.extend([
+            pjoin(qsopt_dir, "qsopt.a"),
+            pjoin(concorde_dir, "concorde.a")
+        ])
 
 
 setup(
     name='pyconcorde',
     ext_modules=cythonize([
-        Extension(
+        ConcordeExtension(
             'concorde._concorde',
             sources=["concorde/_concorde.pyx"],
-            include_dirs=[os.path.join(CONCORDE_DIR, "include"),
-                          np.get_include()],
-            extra_objects=[
-                os.path.join(CONCORDE_DIR, "lib", "concorde.a"),
-                os.path.join(QSOPT_DIR, "lib", "qsopt.a"),
-            ],
+            include_dirs=[np.get_include()],
         )
     ]),
     version='0.1.0',
@@ -190,4 +171,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: BSD License",
     ],
+    cmdclass={
+        'build_ext': build_ext,
+    }
 )
