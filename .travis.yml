@@ -1,21 +1,41 @@
 language: generic
-cache:
-  directories:
-    - $PWD/data
+sudo: false
+
+env:
+  global:
+    - INSTALL_EDM_VERSION=1.9.2
+      PYTHONUNBUFFERED="1"
+
 matrix:
   include:
-    - language: generic
-      os: osx
-      before_install:
-        - tools/build_concorde.sh
-    - language: python
-      os: linux
-      before_install:
-        - tools/build_concorde.sh
+    - env: RUNTIME=2.7
+    - env: RUNTIME=3.5
+    - env: RUNTIME=3.6
+    - os: osx
+      env: RUNTIME=2.7
+    - os: osx
+      env: RUNTIME=3.5
+    - os: osx
+      env: RUNTIME=3.6
+
+cache:
+  directories:
+    - ${HOME}/.cache
+
+before_install:
+  - mkdir -p ~/.cache/download
+  - if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then tools/install_edm_linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; fi
+  - if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then tools/install_edm_osx.sh; export PATH="${PATH}:/usr/local/bin"; fi
+  - edm envs create travisci --version ${RUNTIME}
+  - edm install -e travisci -y cython numpy
+  - tools/build_concorde.sh
 
 install:
-  - tools/bootstrap_edm.sh
-  - export PATH="$PATH:$HOME/bin"
   - edm run -e travisci -- python setup.py develop
+
 script:
   - edm run -e travisci -- python -m unittest discover -v pytsp
+
+after_success:
+  - edm run -- pip install codecov
+  - edm run -- codecov

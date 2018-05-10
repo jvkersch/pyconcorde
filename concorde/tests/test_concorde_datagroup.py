@@ -31,11 +31,11 @@ class TestTSPSolver(unittest.TestCase):
         datagroup = TSPSolver.from_tspfile(fname)
 
         # When
-        tour, val, success, foundtour, timebound = datagroup.solve()
+        tour, val, success, foundtour, hit_timebound = datagroup.solve()
 
         # Then
         nptest.assert_array_equal(tour, expected_tour)
         self.assertAlmostEqual(val, expected_opt_value)
         self.assertTrue(success)
         self.assertTrue(foundtour)
-        self.assertTrue(timebound)
+        self.assertFalse(hit_timebound)

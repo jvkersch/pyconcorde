@@ -36,6 +36,9 @@ those instead. Simply omit the `tools/build_concorde.sh` step, and set the
 environment variable `CONCORDE_DIR` (or `QSOPT_DIR`) to point to the folder
 where you installed Concorde (or QSOpt).
 
+Detailed instructions to build Concorde can be found
+at [this web page](https://github.com/perrygeo/pytsp/wiki/Installing-Solvers).
+
 What can I do with it?
 -------
 

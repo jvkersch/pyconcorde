@@ -90,12 +90,12 @@ def _CCtsp_solve_dat(
 
     cdef:
         int *in_tour = NULL
-        double *in_val = NULL   # initial upper bound
-        double opt_val          # value of the optimal tour
-        int success             # set to 1 if the run finishes normally
-        int foundtour           # set to 1 if a tour has been found
-        double *_timebound      # NULL if no timebound, >= 0 otherwise
-        int hit_timebound
+        double *in_val = NULL      # initial upper bound
+        double opt_val = 0         # value of the optimal tour
+        int success = 0            # set to 1 if the run finishes normally
+        int foundtour = 0          # set to 1 if a tour has been found
+        double *_timebound = NULL  # NULL if no timebound, >= 0 otherwise
+        int hit_timebound = 0
         int retval
 
         # Random state used by the solver
@@ -110,7 +110,6 @@ def _CCtsp_solve_dat(
         seed = <int>CCutil_real_zeit()
     CCutil_sprand (seed, &rstate)
 
-    _timebound = NULL
     if timebound > 0:
         _timebound = &timebound
 
