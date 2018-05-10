@@ -28,7 +28,6 @@ before_install:
   - if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then tools/install_edm_osx.sh; export PATH="${PATH}:/usr/local/bin"; fi
   - edm envs create travisci --version ${RUNTIME}
   - edm install -e travisci -y cython numpy
-  - tools/build_concorde.sh
 
 install:
   - edm run -e travisci -- python setup.py develop
