@@ -1,7 +1,8 @@
 *.pyc
-pytsp/_concorde.c
+concorde/_concorde.c
 
+data/
 build/
-pytsp.egg-info/
+concorde.egg-info/
 
 
