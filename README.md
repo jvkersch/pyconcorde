@@ -19,6 +19,9 @@ solver and provides a convenient Python layer around it.
 	</a>
 </p>
 
+Note: until commit e065497 (pre version 0.1) PyConcorde was called PyTSP. It
+was renamed to emphasize the central role of the underlying Concorde solver.
+
 How do I install it?
 ------
 
