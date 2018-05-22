@@ -15,14 +15,11 @@ both of them. Setting only one will not work as intended.
 """
 from __future__ import print_function
 
-from functools import partial
-import glob
 import os
-from os.path import dirname, exists, join as pjoin
+from os.path import exists, join as pjoin
 import platform
 import shutil
 import subprocess
-import sys
 
 try:
     import urllib.request
@@ -30,11 +27,10 @@ try:
 except ImportError:  # python 2
     from urllib import urlretrieve
 
+from setuptools import find_packages, setup, Extension
 from setuptools.command.build_ext import build_ext as _build_ext
 
 from Cython.Build import cythonize
-from distutils.core import setup
-from distutils.extension import Extension
 
 import numpy as np
 
@@ -81,8 +77,7 @@ def _run(cmd, cwd):
 
 
 def build_concorde():
-    if (not exists("data/concorde.h") or
-        not exists("data/concorde.a")):
+    if (not exists("data/concorde.h") or not exists("data/concorde.a")):
         print("building concorde")
         _run("tar xzvf concorde.tgz", "build")
 
@@ -159,6 +154,9 @@ setup(
         'cython>=0.22.0',
         'numpy>=1.10.0',
     ],
+    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
     license='BSD',
     author='Joris Vankerschaver',
     author_email='joris.vankerschaver@gmail.com',

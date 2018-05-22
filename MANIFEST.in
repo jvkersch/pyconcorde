@@ -1,0 +1,6 @@
+include COPYING
+include README.md
+include MANIFEST.in
+include requirements.txt
+graft tools
+graft concorde/tests/data
