@@ -1,9 +1,9 @@
-*.pyc
-concorde/_concorde.c
-
-data/
 build/
-concorde.egg-info/
-
+dist/
+pyconcorde.egg-info/
 
 /venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
