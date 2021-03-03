@@ -6,3 +6,4 @@ build/
 concorde.egg-info/
 
 
+/venv/
