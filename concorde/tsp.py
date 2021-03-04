@@ -48,8 +48,7 @@ class TSPSolver(object):
             name = uuid.uuid4().hex
         try:
             ccdir = tempfile.mkdtemp()
-            file_name = uuid.uuid4().hex
-            ccfile = os.path.join(ccdir, file_name + '.tsp')
+            ccfile = os.path.join(ccdir,  'data.tsp')
             with open(ccfile, 'w') as fp:
                 write_tsp_file(fp, xs, ys, norm, name)
             return cls.from_tspfile(ccfile)
@@ -75,8 +74,9 @@ class TSPSolver(object):
             return "TSPSolver with {} nodes".format(self._ncount)
 
     def solve(self, time_bound=-1, verbose=True, random_seed=0):
+        name = str(uuid.uuid4().hex)[0:9]
         res = _CCtsp_solve_dat(
-            self._ncount, self._data, "name",
+            self._ncount, self._data, name,
             time_bound, not verbose, random_seed
         )
         return ComputedTour(*res)
