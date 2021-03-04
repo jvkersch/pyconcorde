@@ -48,7 +48,7 @@ class TSPSolver(object):
             name = uuid.uuid4().hex
         try:
             ccdir = tempfile.mkdtemp()
-            ccfile = os.path.join(ccdir,  'data.tsp')
+            ccfile = os.path.join(ccdir, 'data.tsp')
             with open(ccfile, 'w') as fp:
                 write_tsp_file(fp, xs, ys, norm, name)
             return cls.from_tspfile(ccfile)
