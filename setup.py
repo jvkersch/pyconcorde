@@ -43,7 +43,7 @@ QSOPT_LOCATION = {
         ),
         "i386": (
             "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/mac64/qsopt.a",
-            "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/mac64/qsopt.h"
+            "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/mac64/qsopt.h",
         ),
     },
     "Linux": (
