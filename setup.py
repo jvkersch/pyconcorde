@@ -41,15 +41,17 @@ QSOPT_LOCATION = {
             "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/m1/qsopt.a",
             "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/m1/qsopt.h",
         ),
-        "i386": (
+        "x86_64": (
             "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/mac64/qsopt.a",
             "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/mac64/qsopt.h",
         ),
     },
-    "Linux": (
-        "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a",
-        "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h",
-    ),
+    "Linux": {
+        "x86_64": (
+            "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a",
+            "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h",
+        ),
+    },
 }
 
 CONCORDE_SRC = "http://www.math.uwaterloo.ca/tsp/concorde/downloads/codes/src/co031219.tgz"  # noqa
@@ -70,7 +72,7 @@ def download_concorde_qsopt():
     qsopt_h_path = pjoin("data", "qsopt.h")
     if not exists(qsopt_a_path) or not exists(qsopt_h_path):
         print("qsopt is missing, downloading")
-        machine = platform.mac_ver()[-1]
+        machine = platform.machine()
         qsopt_a_url, qsopt_h_url = QSOPT_LOCATION[platform.system()][machine]
         urlretrieve(qsopt_a_url, qsopt_a_path)
         urlretrieve(qsopt_h_url, qsopt_h_path)
