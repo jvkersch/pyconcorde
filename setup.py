@@ -23,6 +23,7 @@ import subprocess
 
 try:
     import urllib.request
+
     urlretrieve = urllib.request.urlretrieve
 except ImportError:  # python 2
     from urllib import urlretrieve
@@ -35,14 +36,22 @@ from Cython.Build import cythonize
 import numpy as np
 
 QSOPT_LOCATION = {
-    "Darwin": (
-        "https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/mac64/qsopt.a",
-        "https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/mac64/qsopt.h"
-    ),
-    "Linux": (
-        "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a",
-        "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h"
-    )
+    "Darwin": {
+        "arm64": (
+            "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/m1/qsopt.a",
+            "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/m1/qsopt.h",
+        ),
+        "x86_64": (
+            "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/mac64/qsopt.a",
+            "https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/mac64/qsopt.h",
+        ),
+    },
+    "Linux": {
+        "x86_64": (
+            "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a",
+            "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h",
+        ),
+    },
 }
 
 CONCORDE_SRC = "http://www.math.uwaterloo.ca/tsp/concorde/downloads/codes/src/co031219.tgz"  # noqa
@@ -63,7 +72,8 @@ def download_concorde_qsopt():
     qsopt_h_path = pjoin("data", "qsopt.h")
     if not exists(qsopt_a_path) or not exists(qsopt_h_path):
         print("qsopt is missing, downloading")
-        qsopt_a_url, qsopt_h_url = QSOPT_LOCATION[platform.system()]
+        machine = platform.machine()
+        qsopt_a_url, qsopt_h_url = QSOPT_LOCATION[platform.system()][machine]
         urlretrieve(qsopt_a_url, qsopt_a_path)
         urlretrieve(qsopt_h_url, qsopt_h_path)
     concorde_src_path = pjoin("build", "concorde.tgz")
@@ -77,7 +87,7 @@ def _run(cmd, cwd):
 
 
 def build_concorde():
-    if (not exists("data/concorde.h") or not exists("data/concorde.a")):
+    if not exists("data/concorde.h") or not exists("data/concorde.a"):
         print("building concorde")
         _run("tar xzvf concorde.tgz", "build")
 
@@ -89,25 +99,20 @@ def build_concorde():
             flags = ""
 
         datadir = os.path.abspath("data")
-        cwd = ('CFLAGS="{cflags}" ./configure --prefix {data} '
-               '--with-qsopt={data} {flags}').format(
-                   cflags=cflags,
-                   data=datadir,
-                   flags=flags
-               )
+        cwd = (
+            'CFLAGS="{cflags}" ./configure --prefix {data} '
+            "--with-qsopt={data} {flags}"
+        ).format(cflags=cflags, data=datadir, flags=flags)
 
         _run(cwd, "build/concorde")
         _run("make", "build/concorde")
 
-        shutil.copyfile("build/concorde/concorde.a",
-                        "data/concorde.a")
-        shutil.copyfile("build/concorde/concorde.h",
-                        "data/concorde.h")
+        shutil.copyfile("build/concorde/concorde.a", "data/concorde.a")
+        shutil.copyfile("build/concorde/concorde.h", "data/concorde.h")
 
 
 class build_ext(_build_ext, object):
-    """ Build command that downloads and installs Concorde, if not found.
-    """
+    """Build command that downloads and installs Concorde, if not found."""
 
     def run(self):
         if not self.has_external_concorde:
@@ -120,48 +125,48 @@ class build_ext(_build_ext, object):
 
     @property
     def has_external_concorde(self):
-        qsopt_dir = os.environ.get('QSOPT_DIR')
-        concorde_dir = os.environ.get('CONCORDE_DIR')
+        qsopt_dir = os.environ.get("QSOPT_DIR")
+        concorde_dir = os.environ.get("CONCORDE_DIR")
         return bool(qsopt_dir) and bool(concorde_dir)
 
 
 class ConcordeExtension(Extension, object):
-    """ Extension that sets Concorde/QSOpt lib/include args.
-    """
+    """Extension that sets Concorde/QSOpt lib/include args."""
 
     def __init__(self, *args, **kwargs):
         super(ConcordeExtension, self).__init__(*args, **kwargs)
-        qsopt_dir = os.environ.get('QSOPT_DIR', "data")
-        concorde_dir = os.environ.get('CONCORDE_DIR', "data")
+        qsopt_dir = os.environ.get("QSOPT_DIR", "data")
+        concorde_dir = os.environ.get("CONCORDE_DIR", "data")
         self.include_dirs.append(concorde_dir)
-        self.extra_objects.extend([
-            pjoin(qsopt_dir, "qsopt.a"),
-            pjoin(concorde_dir, "concorde.a")
-        ])
+        self.extra_objects.extend(
+            [pjoin(qsopt_dir, "qsopt.a"), pjoin(concorde_dir, "concorde.a")]
+        )
 
 
 setup(
-    name='pyconcorde',
-    ext_modules=cythonize([
-        ConcordeExtension(
-            'concorde._concorde',
-            sources=["concorde/_concorde.pyx"],
-            include_dirs=[np.get_include()],
-        )
-    ]),
-    version='0.1.0',
+    name="pyconcorde",
+    ext_modules=cythonize(
+        [
+            ConcordeExtension(
+                "concorde._concorde",
+                sources=["concorde/_concorde.pyx"],
+                include_dirs=[np.get_include()],
+            )
+        ]
+    ),
+    version="0.1.0",
     install_requires=[
-        'cython>=0.22.0',
-        'numpy>=1.10.0',
+        "cython>=0.22.0",
+        "numpy>=1.10.0",
     ],
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    license='BSD',
-    author='Joris Vankerschaver',
-    author_email='joris.vankerschaver@gmail.com',
-    url='https://github.com/jvkersch/pyconcorde',
-    description='Cython wrappers for the Concorde TSP library',
+    license="BSD",
+    author="Joris Vankerschaver",
+    author_email="joris.vankerschaver@gmail.com",
+    url="https://github.com/jvkersch/pyconcorde",
+    description="Cython wrappers for the Concorde TSP library",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Science/Research",
@@ -171,6 +176,6 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     cmdclass={
-        'build_ext': build_ext,
-    }
+        "build_ext": build_ext,
+    },
 )
