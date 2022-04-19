@@ -41,7 +41,7 @@ Then run
 	
 Or, alternatively, all in one line, run:
 
-	pip install git+https://github.com/jvkersch/pyconcorde
+	pip install -e git+https://github.com/jvkersch/pyconcorde
 		
 	
 This will download and build Concorde (and its dependency QSOpt) and then build
