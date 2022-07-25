@@ -39,6 +39,11 @@ Then run
 
 	pip install -e .
 	
+Or, alternatively, all in one line, run:
+
+	pip install -e git+https://github.com/jvkersch/pyconcorde
+		
+	
 This will download and build Concorde (and its dependency QSOpt) and then build
 PyConcorde. While this may take a few minutes, downloading Concorde only
 happens the first time the install script is run (unless you remove the `data`
