@@ -48,13 +48,13 @@ QSOPT_LOCATION = {
     },
     "Linux": {
         "x86_64": (
-            "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a",
+            "https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a",
             "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h",
         ),
     },
 }
 
-CONCORDE_SRC = "http://www.math.uwaterloo.ca/tsp/concorde/downloads/codes/src/co031219.tgz"  # noqa
+CONCORDE_SRC = "https://www.math.uwaterloo.ca/tsp/concorde/downloads/codes/src/co031219.tgz"  # noqa
 
 
 def _safe_makedirs(*paths):
