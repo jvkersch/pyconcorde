@@ -49,7 +49,7 @@ QSOPT_LOCATION = {
     "Linux": {
         "x86_64": (
             "https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.PIC.a",
-            "http://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h",
+            "https://www.math.uwaterloo.ca/~bico/qsopt/beta/codes/PIC/qsopt.h",
         ),
     },
 }
