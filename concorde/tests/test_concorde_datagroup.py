@@ -7,7 +7,6 @@ from concorde.tests.data_utils import get_dataset_path, get_solution_data
 
 
 class TestTSPSolver(unittest.TestCase):
-
     def test_from_data(self):
         # Given
         xs = [1, 2, 3]
@@ -26,8 +25,8 @@ class TestTSPSolver(unittest.TestCase):
 
     def test_solve(self):
         # Given
-        fname = get_dataset_path('berlin52')
-        expected_tour, expected_opt_value = get_solution_data('berlin52')
+        fname = get_dataset_path("berlin52")
+        expected_tour, expected_opt_value = get_solution_data("berlin52")
         datagroup = TSPSolver.from_tspfile(fname)
 
         # When

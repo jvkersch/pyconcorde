@@ -15,8 +15,7 @@ EDGE_WEIGHT_TYPES = {
 
 
 def write_tsp_file(fp, xs, ys, norm, name):
-    """ Write data to a TSPLIB file.
-    """
+    """Write data to a TSPLIB file."""
     if len(xs) != len(ys):
         raise ValueError(
             "x and y coordinate vector must have the "
@@ -24,8 +23,7 @@ def write_tsp_file(fp, xs, ys, norm, name):
         )
     if norm not in EDGE_WEIGHT_TYPES:
         raise ValueError(
-            "Norm {!r} must be one of {}"
-            .format(norm, ', '.join(EDGE_WEIGHT_TYPES))
+            "Norm {!r} must be one of {}".format(norm, ", ".join(EDGE_WEIGHT_TYPES))
         )
 
     fp.write("NAME: {}\n".format(name))
