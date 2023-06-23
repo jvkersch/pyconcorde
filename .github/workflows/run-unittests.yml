@@ -26,4 +26,4 @@ jobs:
         python -m pip install -e . -v
     - name: Run unit tests
       run: |
-        python -m unittest discover -v concorde
+        python -m unittest discover -v .
