@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 import re
+from typing import List
 
 
 @dataclass
 class Solution:
     """Concorde TSP solution."""
 
-    tour: list[int]
+    tour: List[int]
 
     output: str
 
