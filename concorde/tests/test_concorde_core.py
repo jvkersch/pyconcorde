@@ -9,10 +9,9 @@ from concorde.tests.data_utils import get_dataset_path, get_solution_data
 
 
 class TestCCutil_gettsplib(unittest.TestCase):
-
     def test_get_file_exists(self):
         # Given
-        fname = get_dataset_path('berlin52')
+        fname = get_dataset_path("berlin52")
 
         # When
         ncount, datagroup = _CCutil_gettsplib(fname)
@@ -34,16 +33,16 @@ class TestCCutil_gettsplib(unittest.TestCase):
 
 
 class TestCCtsp_solve_dat(unittest.TestCase):
-
     def test_solve_berlin_normal(self):
         # Given
-        fname = get_dataset_path('berlin52')
-        expected_tour, expected_opt_value = get_solution_data('berlin52')
+        fname = get_dataset_path("berlin52")
+        expected_tour, expected_opt_value = get_solution_data("berlin52")
         ncount, datagroup = _CCutil_gettsplib(fname)
 
         # When
-        tour, val, success, foundtour, timebound = \
-            _CCtsp_solve_dat(ncount, datagroup, "berlin", 0, 0)
+        tour, val, success, foundtour, timebound = _CCtsp_solve_dat(
+            ncount, datagroup, "berlin", 0, 0
+        )
 
         # Then
         nptest.assert_array_equal(tour, expected_tour)

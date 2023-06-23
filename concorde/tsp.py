@@ -10,13 +10,12 @@ import uuid
 from concorde._concorde import _CCutil_gettsplib, _CCtsp_solve_dat
 from concorde.util import write_tsp_file, EDGE_WEIGHT_TYPES
 
-ComputedTour = namedtuple('ComputedTour', [
-    'tour', 'optimal_value', 'success', 'found_tour', 'hit_timebound'
-])
+ComputedTour = namedtuple(
+    "ComputedTour", ["tour", "optimal_value", "success", "found_tour", "hit_timebound"]
+)
 
 
 class TSPSolver(object):
-
     def __init__(self):
         self._data = None
         self._ncount = -1
@@ -33,14 +32,17 @@ class TSPSolver(object):
 
     @classmethod
     def from_data(cls, xs, ys, norm, name=None):
-        """ Construct datagroup from given data.
+        """Construct datagroup from given data.
 
         This routine writes the given data to a temporary file, and then uses
         Concorde's file parser to read from file and do the initialization.
         """
         if norm not in EDGE_WEIGHT_TYPES:
-            raise ValueError("norm must be one of {} but got {!r}".format(
-                             ', '.join(EDGE_WEIGHT_TYPES), norm))
+            raise ValueError(
+                "norm must be one of {} but got {!r}".format(
+                    ", ".join(EDGE_WEIGHT_TYPES), norm
+                )
+            )
 
         # TODO: properly figure out Concorde's CCdatagroup format and
         # initialize this object directly instead of going via file.
@@ -48,8 +50,8 @@ class TSPSolver(object):
             name = uuid.uuid4().hex
         try:
             ccdir = tempfile.mkdtemp()
-            ccfile = os.path.join(ccdir, 'data.tsp')
-            with open(ccfile, 'w') as fp:
+            ccfile = os.path.join(ccdir, "data.tsp")
+            with open(ccfile, "w") as fp:
                 write_tsp_file(fp, xs, ys, norm, name)
             return cls.from_tspfile(ccfile)
         finally:
@@ -76,7 +78,6 @@ class TSPSolver(object):
     def solve(self, time_bound=-1, verbose=True, random_seed=0):
         name = str(uuid.uuid4().hex)[0:9]
         res = _CCtsp_solve_dat(
-            self._ncount, self._data, name,
-            time_bound, not verbose, random_seed
+            self._ncount, self._data, name, time_bound, not verbose, random_seed
         )
         return ComputedTour(*res)
