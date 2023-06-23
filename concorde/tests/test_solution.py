@@ -79,3 +79,10 @@ class TestSolution(unittest.TestCase):
 
         # When/then
         self.assertEqual(solution.optimal_value, 6528.0)
+
+    def test_running_time(self):
+        # Given
+        solution = Solution(tour=[], output=OUTPUT)
+
+        # When/then
+        self.assertEqual(solution.running_time, 0.21)

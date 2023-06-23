@@ -36,6 +36,12 @@ class Solution:
         value = _extract_value(self.output, "Optimal Solution: ")
         return float(value)
 
+    @property
+    def running_time(self):
+        """Return total running time (in seconds) to compute tour."""
+        value = _extract_value(self.output, "Total Running Time: ")
+        return float(value.split()[0])
+
 
 def _read_sol_file(fp):
     n_nodes = int(next(fp))
