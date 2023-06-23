@@ -1,7 +1,8 @@
 PyConcorde
 ==========
 
-[![Build Status](https://travis-ci.org/jvkersch/pyconcorde.svg?branch=master)](https://travis-ci.org/jvkersch/pyconcorde)
+![Build Status](https://github.com/jvkersch/pyconcorde/actions/workflows/run-unittests.yml/badge.svg)
+
 
 What is it?
 -----
