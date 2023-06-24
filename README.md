@@ -1,7 +1,8 @@
 PyConcorde
 ==========
 
-[![Build Status](https://travis-ci.org/jvkersch/pyconcorde.svg?branch=master)](https://travis-ci.org/jvkersch/pyconcorde)
+![Build Status](https://github.com/jvkersch/pyconcorde/actions/workflows/run-unittests.yml/badge.svg)
+
 
 What is it?
 -----
@@ -25,7 +26,7 @@ was renamed to emphasize the central role of the underlying Concorde solver.
 How do I install it?
 ------
 
-PyConcorde runs under Python 2.7 and 3.5 and up. It needs the [Concorde TSP
+PyConcorde runs under Python 3.7 and up. It needs the [Concorde TSP
 solver](http://www.math.uwaterloo.ca/tsp/concorde.html) and [QSOpt linear
 programming library](http://www.math.uwaterloo.ca/~bico/qsopt/). Further
 instructions on building/downloading those can be found below.
