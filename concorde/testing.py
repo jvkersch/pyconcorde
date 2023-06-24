@@ -1,7 +1,7 @@
 """Testing utilities."""
 
 from functools import wraps
-from importlib.resources import files
+from pathlib import Path
 import tempfile
 
 
@@ -20,4 +20,4 @@ def temp_folder():
 
 def get_dataset_path(fname):
     """Return a data asset path."""
-    return files("concorde.tests.data").joinpath(fname)
+    return Path(__file__).parent / "tests" / "data" / fname
