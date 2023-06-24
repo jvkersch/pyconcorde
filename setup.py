@@ -158,6 +158,7 @@ setup(
     install_requires=[
         "cython>=0.22.0",
         "numpy>=1.10.0",
+        "tsplib95",
     ],
     packages=find_packages(),
     include_package_data=True,
