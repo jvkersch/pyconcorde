@@ -6,7 +6,6 @@ import tsplib95
 
 @dataclass
 class Problem:
-
     # The underlying tsplib95 problem instance
     _problem: object
 
@@ -26,7 +25,9 @@ class Problem:
         """Initialize a TSP problem from a list of coordinates."""
         coords = {i: (x, y) for (i, (x, y)) in enumerate(zip(xs, ys))}
         problem = tsplib95.models.StandardProblem(
-            dimension=len(coords), edge_weight_type=norm, node_coords=coords,
+            dimension=len(coords),
+            edge_weight_type=norm,
+            node_coords=coords,
         )
         return cls(_problem=problem)
 
