@@ -7,6 +7,7 @@ import tempfile
 
 def temp_folder():
     """Create a temporary folder."""
+
     def inner(fn):
         @wraps(fn)
         def wrapper(self, *args, **kwds):

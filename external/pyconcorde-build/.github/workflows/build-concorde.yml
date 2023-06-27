@@ -1,0 +1,28 @@
+name: Build Concorde
+
+on:
+  workflow_dispatch:
+
+jobs:
+  buildconcorde:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: build concorde (Linux)
+      run: cd scripts && ./build-concorde-linux.sh
+      if: matrix.os == 'ubuntu-latest'
+    - name: build concorde (macOS)
+      run: |
+        cd scripts
+        ./build-concorde-mac-x86_64.sh
+        ./build-concorde-mac-arm64.sh
+      if: matrix.os == 'macos-latest'
+    - name: create PR
+      uses: peter-evans/create-pull-request@v5
+      with:
+        branch-suffix: timestamp
