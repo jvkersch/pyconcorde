@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from concorde.util import symmetricize
 
 import numpy as np
 import tsplib95
@@ -8,6 +9,7 @@ import tsplib95
 class Problem:
     # The underlying tsplib95 problem instance
     _problem: object
+    is_symmetric: bool
 
     @classmethod
     def from_tsp_file(cls, fname):
@@ -35,13 +37,25 @@ class Problem:
     def from_matrix(cls, matrix):
         """Initialize a TSP problem from a distance matrix."""
         matrix = np.asarray(matrix)
+
+        # test if matrix is symmetric
+        if np.array_equal(matrix, matrix.transpose()):
+            # it is symmetric; do nothing
+            print('matrix is symmetric')
+            is_symmetric = True
+        else:
+            # it is asymmetric; transform it into a symmetric matrix
+            print('matrix is not symmetric; making it so')
+            is_symmetric = False
+            matrix = symmetricize(matrix)
+
         problem = tsplib95.models.StandardProblem(
             dimension=matrix.shape[0],
             edge_weights=matrix.tolist(),
             edge_weight_type="EXPLICIT",
             edge_weight_format="FULL_MATRIX",
         )
-        return cls(_problem=problem)
+        return cls(_problem=problem, is_symmetric=is_symmetric)
 
     @property
     def nodes(self):

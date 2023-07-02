@@ -2,7 +2,11 @@
 concorde/_concorde.c
 
 build/
-concorde.egg-info/
+*.egg-info/
 
 
 /venv/
+
+*.ipynb
+/data/
+*cpython*

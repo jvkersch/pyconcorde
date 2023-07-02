@@ -53,3 +53,19 @@ def read_tsp_tour(fname):
     if tour[-1] == -1:
         tour.pop()
     return np.array(tour)
+
+def symmetricize(matrix, high_int=None):
+    
+    # if high_int not provided, make it equal to 10 times the max value:
+    if high_int is None:
+        high_int = round(10*matrix.max())
+        
+    matrix_bar = matrix.copy()
+    np.fill_diagonal(matrix_bar, 0)
+    u = np.matrix(np.ones(matrix.shape) * high_int)
+    np.fill_diagonal(u, 0)
+    matrix_symm_top = np.concatenate((u, np.transpose(matrix_bar)), axis=1)
+    matrix_symm_bottom = np.concatenate((matrix_bar, u), axis=1)
+    matrix_symm = np.concatenate((matrix_symm_top, matrix_symm_bottom), axis=0)
+    
+    return matrix_symm.astype(int) # Concorde requires integer weights
