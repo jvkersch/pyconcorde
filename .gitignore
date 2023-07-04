@@ -1,12 +1,8 @@
 *.pyc
 concorde/_concorde.c
-
 build/
 *.egg-info/
-
-
 /venv/
-
 *.ipynb
 /data/
 *cpython*

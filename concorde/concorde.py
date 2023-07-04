@@ -53,7 +53,7 @@ class Concorde:
 
             if not problem.is_symmetric:
                 # return only original nodes
-                pass # to do
+                solution.remove_ghost_nodes()                    
 
             return solution
 

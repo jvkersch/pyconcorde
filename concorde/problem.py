@@ -15,12 +15,12 @@ class Problem:
     def from_tsp_file(cls, fname):
         """Read in a TSP problem from a file in ``.tsp`` format."""
         problem = tsplib95.load(fname)
-        return cls(_problem=problem)
+        return cls(_problem=problem, is_symmetric=True)
 
     @classmethod
     def from_tsp_problem(cls, problem):
         """Initialize a TSP problem from a tsplib95 problem instance."""
-        return cls(_problem=problem)
+        return cls(_problem=problem, is_symmetric=True)
 
     @classmethod
     def from_coordinates(cls, xs, ys, norm="EUC_2D"):
@@ -31,21 +31,21 @@ class Problem:
             edge_weight_type=norm,
             node_coords=coords,
         )
-        return cls(_problem=problem)
+        return cls(_problem=problem, is_symmetric=True)
 
     @classmethod
     def from_matrix(cls, matrix):
         """Initialize a TSP problem from a distance matrix."""
         matrix = np.asarray(matrix)
 
-        # test if matrix is symmetric
+        if not np.issubdtype(matrix.dtype, np.integer):
+            raise ValueError("Matrix must contain only integer values.")
+
         if np.array_equal(matrix, matrix.transpose()):
             # it is symmetric; do nothing
-            print('matrix is symmetric')
             is_symmetric = True
         else:
-            # it is asymmetric; transform it into a symmetric matrix
-            print('matrix is not symmetric; making it so')
+            # it is asymmetric; transform (n x n) matrix into symmetric (2n x 2n) matrix 
             is_symmetric = False
             matrix = symmetricize(matrix)
 
