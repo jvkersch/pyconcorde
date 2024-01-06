@@ -25,8 +25,8 @@ was renamed to emphasize the central role of the underlying Concorde solver.
 
 How do I install it?
 ------
-
-PyConcorde runs under Python 3.7 and up. It needs the [Concorde TSP
+PyConcorde runs under Python 3.7 and higher and requires a UNIX-like OS 
+(Native Windows not supported, but it can be run under WSL). It needs the [Concorde TSP
 solver](http://www.math.uwaterloo.ca/tsp/concorde.html) and [QSOpt linear
 programming library](http://www.math.uwaterloo.ca/~bico/qsopt/). Further
 instructions on building/downloading those can be found below.
@@ -42,7 +42,7 @@ Then run
 	
 Or, alternatively, all in one line, run:
 
-	pip install -e git+https://github.com/jvkersch/pyconcorde
+	pip install 'pyconcorde @ git+https://github.com/jvkersch/pyconcorde'
 		
 	
 This will download and build Concorde (and its dependency QSOpt) and then build
