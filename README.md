@@ -107,10 +107,11 @@ tour that we just computed:
 Other TSP solvers for Python
 ----------------------------
 
-If you are looking for a pure Python TSP implementation, check
-out [tsp-solver](https://github.com/dmishin/tsp-solver). It is not competitive
-with Concorde in terms of speed or memory usage, but has the advantage of being
-written in pure Python, which makes it more readily inspectable.
+Several other TSP implementations exist. The following are written in pure
+Python:
+
+- [tsp-solver](https://github.com/dmishin/tsp-solver)
+- [python-tsp](https://github.com/fillipe-gsm/python-tsp)
 
 If you have another TSP algorithm that can be called from within Python, and
 you want to have it added here, please open an issue.
