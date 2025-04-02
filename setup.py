@@ -100,7 +100,7 @@ def build_concorde():
             flags = ""
 
         datadir = os.path.abspath("data")
-        cwd = f'CFLAGS="{cflags}" LDFLAGS="-ld_classic" ./configure --prefix {datadir} --with-qsopt={datadir} {flags}'
+        cwd = f'CFLAGS="{cflags}" ./configure --prefix {datadir} --with-qsopt={datadir} {flags}'
 
         _run(cwd, "build/concorde")
         _run("make", "build/concorde")

@@ -17,6 +17,8 @@ cdef extern from "concorde.h":
 
     int CCutil_gettsplib(char *datname, int *ncount, CCdatagroup *dat)
 
+    int CCutil_tri2dat(int ncount, int *elen, CCdatagroup *dat)
+
     int CCtsp_solve_dat (int ncount, CCdatagroup *indat, int *in_tour,
         int *out_tour, double *in_val, double *optval, int *success,
         int *foundtour, char *name, double *timebound, int *hit_timebound,
@@ -83,6 +85,20 @@ def _CCutil_gettsplib(str fname):
     else:
         return -1, None
 
+def _CCutil_tri2dat(int ncount, int[::1] elen):
+    cdef int retval
+    cdef _CCdatagroup dat
+
+    dat = _CCdatagroup()
+
+    retval = CCutil_tri2dat(ncount, &elen[0], &dat.c_data)
+    if retval == 0:
+        dat.initialized = True
+        assert dat.ncount == ncount
+        return ncount, dat
+    else:
+        return -1, None
+    
 
 def _CCtsp_solve_dat(
         int ncount, _CCdatagroup ingroup,
