@@ -92,7 +92,7 @@ def build_concorde():
         print("building concorde")
         _run("tar xzvf concorde.tgz", "build")
 
-        cflags = "-fPIC -O3 -g"
+        cflags = "-fPIC -O3 -g -ansi"
 
         if platform.system().startswith("Darwin"):
             flags = "--host=darwin"
