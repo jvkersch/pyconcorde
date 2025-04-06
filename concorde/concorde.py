@@ -50,6 +50,11 @@ class Concorde:
                 raise ConcordeError() from e
 
             solution = Solution.from_file(tmp / "problem.sol", output=res.stdout)
+
+            if not problem.is_symmetric:
+                # return only original nodes
+                solution.remove_ghost_nodes()                    
+
             return solution
 
 

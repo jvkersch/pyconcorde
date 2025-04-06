@@ -53,3 +53,36 @@ def read_tsp_tour(fname):
     if tour[-1] == -1:
         tour.pop()
     return np.array(tour)
+
+def symmetricize(matrix, k=None):
+    """
+        Jonker-Volgenant method of transforming (n x n) asymmetric TSP, C into (2n x 2n) symmetric TSP, S.
+
+        Let C be an asymmetric TSP matrix.
+        Let k be a very large number, ie k >> C.max()
+        Let U = (u_ij) with u_ii = 0, u_ij = k for i != j.
+
+        Construct the (2n x 2n) matrix:
+        
+                    +-------+
+                    | U |C^T|
+            S =     |---+---|
+                    | C | U |
+                    +-------+
+
+        S is a symmetric TSP problem on 2n nodes.
+        There is a one-to-one correspondence between solutions of S and solutions of C.
+    """
+    # if k not provided, make it equal to 10 times the max value:
+    if k is None:
+        k = round(10*matrix.max())
+        
+    matrix_bar = matrix.copy()
+    np.fill_diagonal(matrix_bar, 0)
+    u = np.matrix(np.ones(matrix.shape).astype(int) * k)
+    np.fill_diagonal(u, 0)
+    matrix_symm_top = np.concatenate((u, np.transpose(matrix_bar)), axis=1)
+    matrix_symm_bottom = np.concatenate((matrix_bar, u), axis=1)
+    matrix_symm = np.concatenate((matrix_symm_top, matrix_symm_bottom), axis=0)
+    
+    return matrix_symm
