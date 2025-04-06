@@ -49,8 +49,7 @@ class Concorde:
             except subprocess.CalledProcessError as e:
                 raise ConcordeError() from e
 
-            solution = Solution.from_file(tmp / "problem.sol", output=res.stdout)
-            return solution
+            return Solution.from_file(tmp / "problem.sol", output=res.stdout)
 
 
 _PLATFORM_MAP = {
@@ -64,12 +63,10 @@ def find_concorde_binary():
     """Return location of concorde binary for the current platform."""
     project_dir = Path(__file__).parent.parent
     pyconcorde_binaries = project_dir / "external" / "pyconcorde-build" / "binaries"
-    if pyconcorde_binaries.exists():
-        # Git checkout, with pyconcorde-build as git subtree
-        location = _PLATFORM_MAP[(platform.system(), platform.machine())]
-        concorde_exe = pyconcorde_binaries / location / "concorde"
-    else:
+    if not pyconcorde_binaries.exists():
         # Not a Git checkout. Assume that we're working from a wheel, with a
         # platform-specific concorde located in the module.
-        concorde_exe = project_dir / "concorde" / "concorde"
-    return concorde_exe
+        return project_dir / "concorde" / "concorde"
+    # Git checkout, with pyconcorde-build as git subtree
+    location = _PLATFORM_MAP[(platform.system(), platform.machine())]
+    return pyconcorde_binaries / location / "concorde"

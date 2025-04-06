@@ -1,4 +1,4 @@
-""" setup command to build Concorde Cython wrappers.
+"""setup command to build Concorde Cython wrappers.
 
 By default, the setup script will download the QSOpt linear solver, and
 download and compile Concorde. If you have either one of these packages
@@ -13,6 +13,7 @@ not set these variables (and rely on the downloaded Concorde) or set
 both of them. Setting only one will not work as intended.
 
 """
+
 from __future__ import print_function
 
 import os
@@ -91,7 +92,7 @@ def build_concorde():
         print("building concorde")
         _run("tar xzvf concorde.tgz", "build")
 
-        cflags = "-fPIC -O2 -g -ansi"
+        cflags = "-fPIC -O3 -g -ansi"
 
         if platform.system().startswith("Darwin"):
             flags = "--host=darwin"
@@ -99,10 +100,7 @@ def build_concorde():
             flags = ""
 
         datadir = os.path.abspath("data")
-        cwd = (
-            'CFLAGS="{cflags}" ./configure --prefix {data} '
-            "--with-qsopt={data} {flags}"
-        ).format(cflags=cflags, data=datadir, flags=flags)
+        cwd = f'CFLAGS="{cflags}" ./configure --prefix {datadir} --with-qsopt={datadir} {flags}'
 
         _run(cwd, "build/concorde")
         _run("make", "build/concorde")
