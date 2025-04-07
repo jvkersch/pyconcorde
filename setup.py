@@ -91,20 +91,21 @@ def build_concorde():
         print("building concorde")
         _run("tar xzvf concorde.tgz", "build")
 
-        cflags = "-fPIC -O2 -g -ansi"
-
-        if platform.system().startswith("Darwin"):
-            flags = "--host=darwin"
-        else:
-            flags = ""
-
         datadir = os.path.abspath("data")
-        cwd = (
-            'CFLAGS="{cflags}" ./configure --prefix {data} '
-            "--with-qsopt={data} {flags}"
-        ).format(cflags=cflags, data=datadir, flags=flags)
 
-        _run(cwd, "build/concorde")
+        if platform.system() == "Darwin" and platform.machine() == "arm64":
+            sdkroot = subprocess.check_output(["xcrun", "--show-sdk-path"]).decode().strip()
+            cflags = "-arch arm64 -fPIC -O2 -g -std=gnu89"
+            ldflags = f"-arch arm64 -isysroot {sdkroot}"
+            configure_cmd = (
+                f'CFLAGS="{cflags}" LDFLAGS="{ldflags}" ./configure '
+                f'--prefix={datadir} --with-qsopt={datadir} --host=arm64-apple-darwin'
+            )
+        else:
+            cflags = "-fPIC -O2 -g -ansi"
+            configure_cmd = f'CFLAGS="{cflags}" ./configure --prefix={datadir} --with-qsopt={datadir}'
+
+        _run(configure_cmd, "build/concorde")
         _run("make", "build/concorde")
 
         shutil.copyfile("build/concorde/concorde.a", "data/concorde.a")
