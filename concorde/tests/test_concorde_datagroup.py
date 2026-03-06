@@ -30,7 +30,7 @@ class TestTSPSolver(unittest.TestCase):
         ys = [0.2, 0.6, 0.8]
         with self.assertWarns(UserWarning) as ctx:
             TSPSolver.from_data(xs, ys, "EUC_2D")
-        self.assertIn("[-1, 1]", str(ctx.warning))
+        self.assertIn("rounds distances", str(ctx.warning))
 
     def test_from_data_warns_large_coordinates(self):
         # Large coordinates risk integer overflow in Concorde

@@ -52,17 +52,18 @@ class TSPSolver(object):
 
         if max_abs <= 1.0:
             warnings.warn(
-                "All coordinates are in [-1, 1]. Concorde uses integer "
-                "distances internally, so small coordinates will be "
-                "truncated to 0. Consider scaling your coordinates "
-                "(e.g. multiply by 1e6).",
+                "All coordinates are in [-1, 1]. Concorde rounds "
+                "distances to the nearest integer, so distances "
+                "between nearby points will round to 0. Consider "
+                "scaling your coordinates (e.g. multiply by 1e6).",
                 UserWarning,
                 stacklevel=2,
             )
         if max_abs > 1e7:
             warnings.warn(
-                "Coordinates exceed 1e7. Large values may cause integer "
-                "overflow in Concorde, leading to incorrect results or "
+                "Coordinates exceed 1e7. Concorde rounds distances "
+                "to the nearest integer, and large values may cause "
+                "integer overflow, leading to incorrect results or "
                 "crashes. Consider scaling down.",
                 UserWarning,
                 stacklevel=2,
