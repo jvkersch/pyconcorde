@@ -119,6 +119,15 @@ you want to have it added here, please open an issue.
 Technical Notes
 -------
 
+**Coordinate scaling:** Concorde rounds all edge distances to the nearest
+integer, as required by the
+[TSPLIB specification](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/tsp95.pdf).
+If your coordinates are small (e.g. in [0, 1]), distances between points will
+round to 0, leading to incorrect results or crashes. Scale your coordinates up
+before passing them to the solver — for example, multiply by 1e6. Similarly,
+very large coordinates (above 1e7) may cause integer overflow. See
+`examples/truncation_demo.py` for a demonstration.
+
 PyConcorde needs Concorde and QSOpt. Downloading and building these packages
 should happen automatically on Linux/Mac OS, but please file an issue if you
 experience any trouble during this step.
