@@ -4,7 +4,7 @@ import warnings
 import numpy.testing as nptest
 
 from concorde.tsp import TSPSolver
-from concorde.tests.data_utils import get_dataset_path, get_solution_data
+from concorde.tests.data_utils import get_dataset_path, get_solution_data, assert_tour_equal
 
 
 class TestTSPSolver(unittest.TestCase):
@@ -75,7 +75,7 @@ class TestTSPSolver(unittest.TestCase):
         tour, val, success, foundtour, hit_timebound = datagroup.solve()
 
         # Then
-        nptest.assert_array_equal(tour, expected_tour)
+        assert_tour_equal(tour, expected_tour)
         self.assertAlmostEqual(val, expected_opt_value)
         self.assertTrue(success)
         self.assertTrue(foundtour)

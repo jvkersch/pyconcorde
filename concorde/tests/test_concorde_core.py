@@ -5,7 +5,7 @@ import numpy as np
 import numpy.testing as nptest
 
 from concorde._concorde import _CCutil_gettsplib, _CCtsp_solve_dat
-from concorde.tests.data_utils import get_dataset_path, get_solution_data
+from concorde.tests.data_utils import get_dataset_path, get_solution_data, assert_tour_equal
 
 
 class TestCCutil_gettsplib(unittest.TestCase):
@@ -45,7 +45,7 @@ class TestCCtsp_solve_dat(unittest.TestCase):
         )
 
         # Then
-        nptest.assert_array_equal(tour, expected_tour)
+        assert_tour_equal(tour, expected_tour)
         self.assertAlmostEqual(val, expected_opt_value)
         self.assertTrue(success)
         self.assertTrue(foundtour)
