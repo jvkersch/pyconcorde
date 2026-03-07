@@ -106,7 +106,7 @@ def _CCtsp_solve_dat(
 
     out_tour = np.zeros(ncount, dtype=np.int32)
 
-    if seed != 0:
+    if seed == 0:
         seed = <int>CCutil_real_zeit()
     CCutil_sprand (seed, &rstate)
 
