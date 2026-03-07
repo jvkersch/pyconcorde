@@ -1,6 +1,7 @@
 from os.path import dirname, join as pjoin
 
 import numpy as np
+import numpy.testing as nptest
 
 
 BERLIN_TOUR = np.array(
@@ -72,3 +73,17 @@ def get_dataset_path(tspname):
 
 def get_solution_data(tspname):
     return SOLUTION_DATA[tspname]
+
+
+def assert_tour_equal(actual, expected):
+    """Assert two TSP tours are equal, allowing for reverse direction.
+
+    A TSP tour is a cycle, so the same optimal tour starting at node 0
+    can be traversed in either direction.
+    """
+    try:
+        nptest.assert_array_equal(actual, expected)
+    except AssertionError:
+        # Try reversed direction: keep node 0 first, reverse the rest
+        reversed_tour = np.concatenate([[expected[0]], expected[1:][::-1]])
+        nptest.assert_array_equal(actual, reversed_tour)
