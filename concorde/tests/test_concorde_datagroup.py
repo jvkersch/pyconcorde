@@ -48,6 +48,23 @@ class TestTSPSolver(unittest.TestCase):
             warnings.simplefilter("error")
             TSPSolver.from_data(xs, ys, "EUC_2D")
 
+    def test_from_data_warns_geo_norm_with_non_geographic_coordinates(self):
+        # Coordinates exceeding 180 don't look like lat/lon
+        xs = [1000, 2000, 3000]
+        ys = [4000, 5000, 6000]
+        with self.assertWarns(UserWarning) as ctx:
+            TSPSolver.from_data(xs, ys, "GEO")
+        self.assertIn("latitude/longitude", str(ctx.warning))
+        self.assertIn("EUC_2D", str(ctx.warning))
+
+    def test_from_data_no_warning_geo_norm_with_geographic_coordinates(self):
+        # Valid lat/lon values should not trigger the geo warning
+        xs = [48.8566, 40.7128, 35.6762]
+        ys = [2.3522, -74.0060, 139.6503]
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            TSPSolver.from_data(xs, ys, "GEO")
+
     def test_solve(self):
         # Given
         fname = get_dataset_path("berlin52")

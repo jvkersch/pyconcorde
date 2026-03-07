@@ -69,6 +69,16 @@ class TSPSolver(object):
                 stacklevel=2,
             )
 
+        if norm in ("GEO", "GEOM"):
+            if np.any(np.abs(xs_arr) > 180) or np.any(np.abs(ys_arr) > 180):
+                warnings.warn(
+                    f"norm={norm!r} expects geographic coordinates "
+                    "(latitude/longitude) but values exceed 180. "
+                    "Consider using 'EUC_2D' for Euclidean distances.",
+                    UserWarning,
+                    stacklevel=2,
+                )
+
         # TODO: properly figure out Concorde's CCdatagroup format and
         # initialize this object directly instead of going via file.
         if name is None:

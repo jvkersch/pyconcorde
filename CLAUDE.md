@@ -24,6 +24,10 @@ python -m unittest concorde.tests.test_concorde.TestConcorde.test_solve -v
 
 No separate lint or type-check tooling is configured.
 
+## Development Workflow
+
+Follow the red/green TDD pattern: always start by writing a failing test, verify it fails, then implement the fix and verify the test passes.
+
 Set `CONCORDE_DIR` and `QSOPT_DIR` environment variables to use pre-installed Concorde/QSOpt instead of downloading.
 
 ## Architecture
