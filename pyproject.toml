@@ -1,2 +1,29 @@
 [build-system]
 requires = ["setuptools", "numpy", "Cython"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyconcorde"
+version = "0.1.0"
+description = "Cython wrappers for the Concorde TSP library"
+license = "BSD-3-Clause"
+authors = [
+    { name = "Joris Vankerschaver", email = "joris.vankerschaver@gmail.com" },
+]
+requires-python = ">=3.9"
+dependencies = [
+    "cython>=0.22.0",
+    "numpy>=1.21.0",
+    "tsplib95",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+]
+
+[project.urls]
+Homepage = "https://github.com/jvkersch/pyconcorde"
+
+[tool.setuptools.packages.find]
+include = ["concorde*"]

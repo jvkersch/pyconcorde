@@ -8,18 +8,20 @@ PyConcorde is a Python wrapper around the [Concorde TSP solver](http://www.math.
 
 ## Build & Development
 
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
+
 ```bash
-# Install in editable mode (downloads and builds Concorde + QSOpt automatically on first run)
-pip install -e .
+# Install dependencies and build (downloads and builds Concorde + QSOpt automatically on first run)
+uv sync
 
 # Run all tests
-python -m unittest discover -v .
+uv run python -m unittest discover -v .
 
 # Run a single test file
-python -m unittest concorde.tests.test_concorde -v
+uv run python -m unittest concorde.tests.test_concorde -v
 
 # Run a single test
-python -m unittest concorde.tests.test_concorde.TestConcorde.test_solve -v
+uv run python -m unittest concorde.tests.test_concorde.TestConcorde.test_solve -v
 ```
 
 No separate lint or type-check tooling is configured.
@@ -46,7 +48,8 @@ There are two parallel APIs:
 - The Cython extension links against `concorde.a` and `qsopt.a` static libraries
 
 ### Key files
-- `setup.py` — custom build that downloads QSOpt and compiles Concorde from source, then builds the Cython extension
+- `pyproject.toml` — project metadata and dependencies
+- `setup.py` — custom build logic that downloads QSOpt and compiles Concorde from source, then builds the Cython extension
 - `concorde/_concorde.pyx` — Cython bridge to Concorde's C API
 - `concorde/util.py` — TSP file writing utilities and `EDGE_WEIGHT_TYPES` constants
 - `concorde/testing.py` — test helpers (`temp_folder` decorator, `get_dataset_path`)

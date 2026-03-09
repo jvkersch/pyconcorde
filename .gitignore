@@ -3,6 +3,6 @@ concorde/_concorde.c
 
 build/
 concorde.egg-info/
+pyconcorde.egg-info/
 
-
-/venv/
+.venv/
