@@ -89,10 +89,7 @@ def build_concorde():
             flags = ""
 
         datadir = os.path.abspath("data")
-        cwd = (
-            'CFLAGS="{cflags}" ./configure --prefix {data} '
-            "--with-qsopt={data} {flags}"
-        ).format(cflags=cflags, data=datadir, flags=flags)
+        cwd = f'CFLAGS="{cflags}" ./configure --prefix {datadir} --with-qsopt={datadir} {flags}'
 
         _run(cwd, "build/concorde")
         _run("make", "build/concorde")

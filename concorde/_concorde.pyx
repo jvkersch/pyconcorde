@@ -11,11 +11,14 @@ cdef extern from "concorde.h":
         double *x
         double *y
         double *z
+        int **adj
 
     struct CCrandstate:
         pass
 
     int CCutil_gettsplib(char *datname, int *ncount, CCdatagroup *dat)
+
+    int CCutil_tri2dat(int ncount, int *elen, CCdatagroup *dat)
 
     int CCtsp_solve_dat (int ncount, CCdatagroup *indat, int *in_tour,
         int *out_tour, double *in_val, double *optval, int *success,
@@ -68,6 +71,22 @@ cdef class _CCdatagroup:
         else:
             return np.array([])
 
+    @property
+    def adj(self):
+        cdef int[:, :] adj_data
+        if self.initialized and self.c_data.adj != NULL:
+            adj_data = np.zeros((self.ncount, self.ncount), dtype=np.int32)
+            for i in range(self.ncount):
+                for j in range(self.ncount):
+                    if i > j:
+                        adj_data[i, j] = self.c_data.adj[i][j]
+                    elif i < j:
+                        adj_data[i, j] = self.c_data.adj[j][i]
+                    else:
+                        adj_data[i, j] = 0
+            return np.asarray(adj_data)
+        else:
+            return np.array([[]], dtype=np.int32)
 
 def _CCutil_gettsplib(str fname):
     cdef int ncount, retval
@@ -83,6 +102,19 @@ def _CCutil_gettsplib(str fname):
     else:
         return -1, None
 
+def _CCutil_tri2dat(int ncount, int[::1] elen):
+    cdef int retval
+    cdef _CCdatagroup dat
+
+    dat = _CCdatagroup()
+
+    retval = CCutil_tri2dat(ncount, &elen[0], &dat.c_data)
+    if retval == 0:
+        dat.initialized = True
+        dat.ncount = ncount
+        return ncount, dat
+    else:
+        return -1, None  
 
 def _CCtsp_solve_dat(
         int ncount, _CCdatagroup ingroup,

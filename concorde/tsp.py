@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, print_function
 
+import numpy as np
 from collections import namedtuple
 import os
 import shutil
@@ -10,7 +11,7 @@ import warnings
 
 import numpy as np
 
-from concorde._concorde import _CCutil_gettsplib, _CCtsp_solve_dat
+from concorde._concorde import _CCutil_gettsplib, _CCtsp_solve_dat, _CCutil_tri2dat
 from concorde.util import write_tsp_file, EDGE_WEIGHT_TYPES
 
 ComputedTour = namedtuple(
@@ -27,10 +28,26 @@ class TSPSolver(object):
     def from_tspfile(cls, fname):
         ncount, data = _CCutil_gettsplib(fname)
         if data is None:
-            raise RuntimeError("Error in loading {}".format(fname))
+            raise RuntimeError(f"Error in loading {fname}")
         self = cls()
         self._ncount = ncount
         self._data = data
+        return self
+
+    @classmethod
+    def from_lower_tri(cls, shape: int, edges: np.ndarray):
+        """Construct datagroup from given lower triangular matrix.
+
+        The edges list must be a list of length shape*(shape-1)/2, and
+        represent the lower triangular part of the distance matrix.
+        """
+        if len(edges) != shape * (shape - 1) // 2:
+            raise ValueError(
+                f"edges must have length {shape * (shape - 1) // 2} but got {len(edges)}"
+            )
+        self = cls()
+        self._ncount = shape
+        _, self._data = _CCutil_tri2dat(shape, np.ascontiguousarray(edges))
         return self
 
     @classmethod
